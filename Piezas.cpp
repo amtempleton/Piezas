@@ -58,26 +58,28 @@ void Piezas::reset()
 **/
 Piece Piezas::dropPiece(int column)
 {
-    if(board[0][column] == Blank)
-    {
-        board[0][column] = turn;
-    }
-    else if(board[1][column] == Blank)
-    {
-        board[1][column] = turn;
-    }
-    else if(board[2][column] == Blank)
-    {
-        board[2][column] = turn;
-    }
-    else
-    {
-      
-    }
 
+      if(column > 3)
+        return Invalid;
 
+      for(int i = 0; i < BOARD_ROWS; i++)
+      {
+        //drop piece
+        if(board[i][column] == Blank)
+        {
+            board[i][column] = turn;
 
-    return Blank;
+            //toggle turn
+            if(turn == X)
+              turn = O;
+            else
+              turn  = X;
+
+            return board[i][colum];
+        }//if
+      }//for
+
+      return Blank;
 }
 
 /**
@@ -86,7 +88,15 @@ Piece Piezas::dropPiece(int column)
 **/
 Piece Piezas::pieceAt(int row, int column)
 {
-    return Blank;
+
+    if(row > BOARD_ROWS || column > BOARD_COLS)
+    {
+      return Invalid;
+    }
+    else
+    {
+        return board[row][colum];
+    }
 }
 
 /**
@@ -100,5 +110,100 @@ Piece Piezas::pieceAt(int row, int column)
 **/
 Piece Piezas::gameState()
 {
-    return Blank;
+    int xcount = 0;
+    int ocount = 0;
+    int xrowcount = 0;
+    int orowcount = 0;
+    vector<int> xtotal;
+    vector<int> ototal;
+    vector<int> xrowtotal;
+    vector<int> orowtotal;
+
+    //game not over
+    for(int a = 0; a < BOARD_ROWS; a++)
+    {
+      for(inr b = 0; b < BOARD_COLS; b++)
+      {
+        if(board[a][b] == Blank)
+          return Invalid;
+      }
+    }
+
+    for(int i = 0; i < BOARD_ROWS; i++)
+    {
+      //reset
+      xcount = 0;
+      ocount = 0;
+
+      if(board[i][1] == X){
+        xcount++;
+        if(board[i][1] == board[i][0])
+        {
+          xcount++;
+        }
+        if(board[i][1] == board[i][2])
+        {
+          xcount++;
+        }
+        if(board[i][1] == board[i][3])
+        {
+          xcount++;
+        }
+      }
+      else if(board[i][1] == O){
+        ocount++;
+        if(board[i][1] == board[i][0])
+        {
+          ocount++;
+        }
+        if(board[i][1] == board[i][2])
+        {
+          ocount++;
+        }
+        if(board[i][1] == board[i][3])
+        {
+          ocount++;
+        }
+      }
+      //row counts
+      xtotal[i] = xcount;
+      ototal[i] = ocount;
+    }//for
+
+    for(int k = 0; k < BOARD_COLS; k++)
+    {
+      xrowcount = 0;
+      orowcount = 0;
+
+      if(board[1][k] == X)
+      {
+        xrowcount++;
+        if(board[1][k] == board[0][k]){
+          xrowcount++;
+        }
+        if(board[1][k] == board[2][k])
+        {
+          xrowcount++;
+        }
+      }//if
+      else if(board[1][k] == O)
+      {
+        orowcount++;
+        if(board[1][k] == board[0][k]){
+          orowcount++;
+        }
+        if(board[1][k] == board[2][k])
+        {
+          orowcount++;
+        }
+      }//if
+      xrowtotal[k] = xrowcount;
+      orowtotal[k] = orowcount;
+    }//for
+
+    int total = 0;
+    for(int rt = 0; rt < 4; rt++){
+      
+    }
+
 }
