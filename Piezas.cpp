@@ -242,37 +242,6 @@ Piece Piezas::gameState()
       }
     }
 
-
-    cout << ototal.size() << endl;
-    /*cout << "xcoltotal: ";
-    for(int in = 0; in < xcoltotal.size(); in++)
-    {
-      cout << xcoltotal[in] << " ";
-    }
-    cout << endl;
-
-    cout << "ocoltotal: ";
-    for(in = 0; in < ocoltotal.size(); in++)
-    {
-      cout << ocoltotal[in] << " ";
-    }
-    cout << endl;
-
-    cout << "xtotal: ";
-    for(in = 0; in < xtotal.size(); in++)
-    {
-      cout << xtotal[in] << " ";
-    }
-    cout << endl;*/
-
-    int size = ototal.size();
-    cout << "ototal: ";
-    for(int in = 0; in < size; in++)
-    {
-      cout << ototal[in] << " ";
-    }
-    cout << endl;
-
     cout << "Checking who won ... ";
     if(xlargest > olargest)
     {
@@ -287,8 +256,6 @@ Piece Piezas::gameState()
     else
     {
       cout << "Tie\n";
-      cout << "x: " << xlargest << endl;
-      cout << "o: " << olargest << endl;
       return Invalid;
     }
 }
