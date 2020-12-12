@@ -112,12 +112,12 @@ Piece Piezas::gameState()
 {
     int xcount = 0;
     int ocount = 0;
-    int xrowcount = 0;
-    int orowcount = 0;
+    int xcolcount = 0;
+    int ocolcount = 0;
     vector<int> xtotal;
     vector<int> ototal;
-    vector<int> xrowtotal;
-    vector<int> orowtotal;
+    vector<int> xcoltotal;
+    vector<int> ocoltotal;
 
     //game not over
     for(int a = 0; a < BOARD_ROWS; a++)
@@ -125,6 +125,7 @@ Piece Piezas::gameState()
       for(inr b = 0; b < BOARD_COLS; b++)
       {
         if(board[a][b] == Blank)
+          cout << "Game Not Over\n";
           return Invalid;
       }
     }
@@ -172,38 +173,84 @@ Piece Piezas::gameState()
 
     for(int k = 0; k < BOARD_COLS; k++)
     {
-      xrowcount = 0;
-      orowcount = 0;
+      xcolcount = 0;
+      ocolcount = 0;
 
       if(board[1][k] == X)
       {
-        xrowcount++;
+        xcolcount++;
         if(board[1][k] == board[0][k]){
-          xrowcount++;
+          xcolcount++;
         }
         if(board[1][k] == board[2][k])
         {
-          xrowcount++;
+          xcolcount++;
         }
       }//if
       else if(board[1][k] == O)
       {
-        orowcount++;
+        ocolcount++;
         if(board[1][k] == board[0][k]){
-          orowcount++;
+          ocolcount++;
         }
         if(board[1][k] == board[2][k])
         {
-          orowcount++;
+          ocolcount++;
         }
       }//if
-      xrowtotal[k] = xrowcount;
-      orowtotal[k] = orowcount;
+      xcoltotal[k] = xcolcount;
+      ocoltotal[k] = ocolcount;
     }//for
 
     int total = 0;
-    for(int rt = 0; rt < 4; rt++){
-      
+    int tie = 0;
+
+    //check columns
+    for(int col = 0; col < BOARD_COLS; col++)
+    {
+      if(xcoltotal[col] > total)
+      {
+          total = xcoltotal[col];
+          turn = X;
+      }
+      else if (ocoltotal[col] > total)
+      {
+         total = ocoltotal[col];
+         turn = O;
+      }
+      else
+      {
+        tie++;
+      }
     }
+    //check rows
+    for(int row = 0; row < BOARD_ROWS; row++)
+    {
+      if(xtotal[row] > total)
+      {
+          total = xtotal[col];
+          turn = X;
+      }
+      else if (ototal[col] > total)
+      {
+         total = ototal[col];
+         turn = O;
+      }
+      else
+      {
+        tie++;
+      }
+    }
+
+    if(tie == 7){
+      cout << "Tie\n";
+      return Invalid;
+    }
+    else
+    {
+      cout << "streak: " << total << endl;
+      return turn;
+    }
+
 
 }
