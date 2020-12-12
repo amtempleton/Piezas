@@ -1,5 +1,7 @@
 #include "Piezas.h"
 #include <vector>
+#include <iostream>
+using namespace std;
 /** CLASS Piezas
  * Class for representing a Piezas vertical board, which is roughly based
  * on the game "Connect Four" where pieces are placed in a column and
@@ -22,8 +24,10 @@
 **/
 Piezas::Piezas()
 {
+    board.resize(BOARD_ROWS);
     for(int i =0; i< BOARD_ROWS; i++)
     {
+        board[i].resize(BOARD_COLS);
         for(int j = 0; j < BOARD_COLS; j++)
         {
           board[i][j] = Blank;
@@ -58,7 +62,7 @@ void Piezas::reset()
 **/
 Piece Piezas::dropPiece(int column)
 {
-
+      //can enter column 0-3
       if(column > 3)
         return Invalid;
 
@@ -75,7 +79,7 @@ Piece Piezas::dropPiece(int column)
             else
               turn  = X;
 
-            return board[i][colum];
+            return board[i][column];
         }//if
       }//for
 
@@ -89,13 +93,13 @@ Piece Piezas::dropPiece(int column)
 Piece Piezas::pieceAt(int row, int column)
 {
 
-    if(row > BOARD_ROWS || column > BOARD_COLS)
+    if(row < 0 || row >= BOARD_ROWS || column < 0 || column >= BOARD_COLS)
     {
       return Invalid;
     }
     else
     {
-        return board[row][colum];
+        return board[row][column];
     }
 }
 
@@ -119,17 +123,21 @@ Piece Piezas::gameState()
     vector<int> xcoltotal;
     vector<int> ocoltotal;
 
+    cout << "Checking if game is over ... ";
+
     //game not over
     for(int a = 0; a < BOARD_ROWS; a++)
     {
-      for(inr b = 0; b < BOARD_COLS; b++)
+      for(int b = 0; b < BOARD_COLS; b++)
       {
-        if(board[a][b] == Blank)
+        if(board[a][b] == Blank){
           cout << "Game Not Over\n";
           return Invalid;
+        }
       }
     }
 
+    cout << "Game is over\n";
     for(int i = 0; i < BOARD_ROWS; i++)
     {
       //reset
@@ -165,10 +173,10 @@ Piece Piezas::gameState()
         {
           ocount++;
         }
-      }
+      }//else if
       //row counts
-      xtotal[i] = xcount;
-      ototal[i] = ocount;
+      xtotal.push_back(xcount);
+      ototal.push_back(ocount);
     }//for
 
     for(int k = 0; k < BOARD_COLS; k++)
@@ -198,59 +206,89 @@ Piece Piezas::gameState()
           ocolcount++;
         }
       }//if
-      xcoltotal[k] = xcolcount;
-      ocoltotal[k] = ocolcount;
+      xcoltotal.push_back(xcolcount);
+      ocoltotal.push_back(ocolcount);
     }//for
 
-    int total = 0;
-    int tie = 0;
+    int xlargest = 0;
+    int olargest = 0;
 
     //check columns
     for(int col = 0; col < BOARD_COLS; col++)
     {
-      if(xcoltotal[col] > total)
+      if(xcoltotal[col] > xlargest)
       {
-          total = xcoltotal[col];
+          xlargest = xcoltotal[col];
           turn = X;
       }
-      else if (ocoltotal[col] > total)
+      else if (ocoltotal[col] > olargest)
       {
-         total = ocoltotal[col];
+         olargest = ocoltotal[col];
          turn = O;
-      }
-      else
-      {
-        tie++;
       }
     }
     //check rows
     for(int row = 0; row < BOARD_ROWS; row++)
     {
-      if(xtotal[row] > total)
+      if(xtotal[row] > xlargest)
       {
-          total = xtotal[col];
+          xlargest = xtotal[row];
           turn = X;
       }
-      else if (ototal[col] > total)
+      else if (ototal[row] > olargest)
       {
-         total = ototal[col];
+         olargest = ototal[row];
          turn = O;
-      }
-      else
-      {
-        tie++;
       }
     }
 
-    if(tie == 7){
-      cout << "Tie\n";
-      return Invalid;
+
+    cout << ototal.size() << endl;
+    /*cout << "xcoltotal: ";
+    for(int in = 0; in < xcoltotal.size(); in++)
+    {
+      cout << xcoltotal[in] << " ";
+    }
+    cout << endl;
+
+    cout << "ocoltotal: ";
+    for(in = 0; in < ocoltotal.size(); in++)
+    {
+      cout << ocoltotal[in] << " ";
+    }
+    cout << endl;
+
+    cout << "xtotal: ";
+    for(in = 0; in < xtotal.size(); in++)
+    {
+      cout << xtotal[in] << " ";
+    }
+    cout << endl;*/
+
+    int size = ototal.size();
+    cout << "ototal: ";
+    for(int in = 0; in < size; in++)
+    {
+      cout << ototal[in] << " ";
+    }
+    cout << endl;
+
+    cout << "Checking who won ... ";
+    if(xlargest > olargest)
+    {
+      cout << "X, streak: " << xlargest << endl;
+      return turn;
+    }
+    else if (xlargest < olargest)
+    {
+      cout << "O, streak: " << olargest << endl;
+      return turn;
     }
     else
     {
-      cout << "streak: " << total << endl;
-      return turn;
+      cout << "Tie\n";
+      cout << "x: " << xlargest << endl;
+      cout << "o: " << olargest << endl;
+      return Invalid;
     }
-
-
 }
